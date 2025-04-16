@@ -1055,97 +1055,112 @@ export class Whinself implements INodeType {
 			for (let i = 0; i < items.length; i++) {
 				try {
 					let responseData;
+					const item = items[i];
 
 					// Handle different resources and operations
 					if (resource === 'message') {
 						if (operation === 'send') {
-							const jid = this.getNodeParameter('jid', i) as string;
-							const messageType = this.getNodeParameter('messageType', i) as string;
+							// Get the incoming payload
+							const incomingData = item.json;
 							
-							let messageData: any = {};
-							
-							// Prepare message data based on message type
-							if (messageType === 'text') {
-								messageData = {
-									text: this.getNodeParameter('text', i) as string,
-									jid,
-								};
-							} else if (messageType === 'link') {
-								messageData = {
-									link: {
-										title: this.getNodeParameter('linkTitle', i) as string,
-										text: this.getNodeParameter('linkText', i) as string,
-										url: this.getNodeParameter('linkUrl', i) as string,
-										thumbnail: this.getNodeParameter('linkThumbnail', i) as string,
-										description: this.getNodeParameter('linkDescription', i) as string,
-									},
-									jid,
-								};
-							} else if (messageType === 'image') {
-								messageData = {
-									image: {
-										url: this.getNodeParameter('mediaUrl', i) as string,
-										b64: this.getNodeParameter('mediaBase64', i) as string,
-									},
-									caption: this.getNodeParameter('caption', i) as string,
-									jid,
-								};
-							} else if (messageType === 'video') {
-								messageData = {
-									video: {
-										url: this.getNodeParameter('mediaUrl', i) as string,
-										b64: this.getNodeParameter('mediaBase64', i) as string,
-									},
-									caption: this.getNodeParameter('caption', i) as string,
-									jid,
-								};
-							} else if (messageType === 'document') {
-								messageData = {
-									document: {
-										url: this.getNodeParameter('mediaUrl', i) as string,
-										b64: this.getNodeParameter('mediaBase64', i) as string,
-										filename: this.getNodeParameter('filename', i) as string,
-									},
-									caption: this.getNodeParameter('caption', i) as string,
-									jid,
-								};
-							} else if (messageType === 'audio') {
-								messageData = {
-									audio: {
-										url: this.getNodeParameter('mediaUrl', i) as string,
-										b64: this.getNodeParameter('mediaBase64', i) as string,
-										seconds: this.getNodeParameter('audioSeconds', i) as number,
-										isPTT: this.getNodeParameter('isPTT', i) as boolean,
-									},
-									jid,
-								};
-							} else if (messageType === 'contact') {
-								messageData = {
-									contact: {
-										displayName: this.getNodeParameter('contactDisplayName', i) as string,
-										vcard: this.getNodeParameter('contactVCard', i) as string,
-									},
-									jid,
-								};
-							} else if (messageType === 'location') {
-								messageData = {
-									location: {
-										latitude: this.getNodeParameter('latitude', i) as number,
-										longitude: this.getNodeParameter('longitude', i) as number,
-										name: this.getNodeParameter('locationName', i) as string,
-										address: this.getNodeParameter('locationAddress', i) as string,
-									},
-									jid,
-								};
-							}
+							// If we have an incoming payload, use it directly
+							if (incomingData && Object.keys(incomingData).length > 0) {
+								responseData = await this.helpers.request({
+									method: 'POST',
+									url: `${baseUrl}/wspout`,
+									body: incomingData,
+									json: true,
+								});
+							} else {
+								// Fallback to using node parameters if no incoming payload
+								const jid = this.getNodeParameter('jid', i) as string;
+								const messageType = this.getNodeParameter('messageType', i) as string;
+								
+								let messageData: any = {};
+								
+								// Prepare message data based on message type
+								if (messageType === 'text') {
+									messageData = {
+										text: this.getNodeParameter('text', i) as string,
+										jid,
+									};
+								} else if (messageType === 'link') {
+									messageData = {
+										link: {
+											title: this.getNodeParameter('linkTitle', i) as string,
+											text: this.getNodeParameter('linkText', i) as string,
+											url: this.getNodeParameter('linkUrl', i) as string,
+											thumbnail: this.getNodeParameter('linkThumbnail', i) as string,
+											description: this.getNodeParameter('linkDescription', i) as string,
+										},
+										jid,
+									};
+								} else if (messageType === 'image') {
+									messageData = {
+										image: {
+											url: this.getNodeParameter('mediaUrl', i) as string,
+											b64: this.getNodeParameter('mediaBase64', i) as string,
+										},
+										caption: this.getNodeParameter('caption', i) as string,
+										jid,
+									};
+								} else if (messageType === 'video') {
+									messageData = {
+										video: {
+											url: this.getNodeParameter('mediaUrl', i) as string,
+											b64: this.getNodeParameter('mediaBase64', i) as string,
+										},
+										caption: this.getNodeParameter('caption', i) as string,
+										jid,
+									};
+								} else if (messageType === 'document') {
+									messageData = {
+										document: {
+											url: this.getNodeParameter('mediaUrl', i) as string,
+											b64: this.getNodeParameter('mediaBase64', i) as string,
+											filename: this.getNodeParameter('filename', i) as string,
+										},
+										caption: this.getNodeParameter('caption', i) as string,
+										jid,
+									};
+								} else if (messageType === 'audio') {
+									messageData = {
+										audio: {
+											url: this.getNodeParameter('mediaUrl', i) as string,
+											b64: this.getNodeParameter('mediaBase64', i) as string,
+											seconds: this.getNodeParameter('audioSeconds', i) as number,
+											isPTT: this.getNodeParameter('isPTT', i) as boolean,
+										},
+										jid,
+									};
+								} else if (messageType === 'contact') {
+									messageData = {
+										contact: {
+											displayName: this.getNodeParameter('contactDisplayName', i) as string,
+											vcard: this.getNodeParameter('contactVCard', i) as string,
+										},
+										jid,
+									};
+								} else if (messageType === 'location') {
+									messageData = {
+										location: {
+											latitude: this.getNodeParameter('latitude', i) as number,
+											longitude: this.getNodeParameter('longitude', i) as number,
+											name: this.getNodeParameter('locationName', i) as string,
+											address: this.getNodeParameter('locationAddress', i) as string,
+										},
+										jid,
+									};
+								}
 
-							// Send message
-							responseData = await this.helpers.request({
-								method: 'POST',
-								url: `${baseUrl}/wspout`,
-								body: messageData,
-								json: true,
-							});
+								// Send message
+								responseData = await this.helpers.request({
+									method: 'POST',
+									url: `${baseUrl}/wspout`,
+									body: messageData,
+									json: true,
+								});
+							}
 						}
 					} else if (resource === 'group') {
 						if (operation === 'create') {

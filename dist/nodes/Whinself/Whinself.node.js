@@ -1034,97 +1034,109 @@ class Whinself {
             for (let i = 0; i < items.length; i++) {
                 try {
                     let responseData;
+                    const item = items[i];
                     if (resource === 'message') {
                         if (operation === 'send') {
-                            const jid = this.getNodeParameter('jid', i);
-                            const messageType = this.getNodeParameter('messageType', i);
-                            let messageData = {};
-                            if (messageType === 'text') {
-                                messageData = {
-                                    text: this.getNodeParameter('text', i),
-                                    jid,
-                                };
+                            const incomingData = item.json;
+                            if (incomingData && Object.keys(incomingData).length > 0) {
+                                responseData = await this.helpers.request({
+                                    method: 'POST',
+                                    url: `${baseUrl}/wspout`,
+                                    body: incomingData,
+                                    json: true,
+                                });
                             }
-                            else if (messageType === 'link') {
-                                messageData = {
-                                    link: {
-                                        title: this.getNodeParameter('linkTitle', i),
-                                        text: this.getNodeParameter('linkText', i),
-                                        url: this.getNodeParameter('linkUrl', i),
-                                        thumbnail: this.getNodeParameter('linkThumbnail', i),
-                                        description: this.getNodeParameter('linkDescription', i),
-                                    },
-                                    jid,
-                                };
+                            else {
+                                const jid = this.getNodeParameter('jid', i);
+                                const messageType = this.getNodeParameter('messageType', i);
+                                let messageData = {};
+                                if (messageType === 'text') {
+                                    messageData = {
+                                        text: this.getNodeParameter('text', i),
+                                        jid,
+                                    };
+                                }
+                                else if (messageType === 'link') {
+                                    messageData = {
+                                        link: {
+                                            title: this.getNodeParameter('linkTitle', i),
+                                            text: this.getNodeParameter('linkText', i),
+                                            url: this.getNodeParameter('linkUrl', i),
+                                            thumbnail: this.getNodeParameter('linkThumbnail', i),
+                                            description: this.getNodeParameter('linkDescription', i),
+                                        },
+                                        jid,
+                                    };
+                                }
+                                else if (messageType === 'image') {
+                                    messageData = {
+                                        image: {
+                                            url: this.getNodeParameter('mediaUrl', i),
+                                            b64: this.getNodeParameter('mediaBase64', i),
+                                        },
+                                        caption: this.getNodeParameter('caption', i),
+                                        jid,
+                                    };
+                                }
+                                else if (messageType === 'video') {
+                                    messageData = {
+                                        video: {
+                                            url: this.getNodeParameter('mediaUrl', i),
+                                            b64: this.getNodeParameter('mediaBase64', i),
+                                        },
+                                        caption: this.getNodeParameter('caption', i),
+                                        jid,
+                                    };
+                                }
+                                else if (messageType === 'document') {
+                                    messageData = {
+                                        document: {
+                                            url: this.getNodeParameter('mediaUrl', i),
+                                            b64: this.getNodeParameter('mediaBase64', i),
+                                            filename: this.getNodeParameter('filename', i),
+                                        },
+                                        caption: this.getNodeParameter('caption', i),
+                                        jid,
+                                    };
+                                }
+                                else if (messageType === 'audio') {
+                                    messageData = {
+                                        audio: {
+                                            url: this.getNodeParameter('mediaUrl', i),
+                                            b64: this.getNodeParameter('mediaBase64', i),
+                                            seconds: this.getNodeParameter('audioSeconds', i),
+                                            isPTT: this.getNodeParameter('isPTT', i),
+                                        },
+                                        jid,
+                                    };
+                                }
+                                else if (messageType === 'contact') {
+                                    messageData = {
+                                        contact: {
+                                            displayName: this.getNodeParameter('contactDisplayName', i),
+                                            vcard: this.getNodeParameter('contactVCard', i),
+                                        },
+                                        jid,
+                                    };
+                                }
+                                else if (messageType === 'location') {
+                                    messageData = {
+                                        location: {
+                                            latitude: this.getNodeParameter('latitude', i),
+                                            longitude: this.getNodeParameter('longitude', i),
+                                            name: this.getNodeParameter('locationName', i),
+                                            address: this.getNodeParameter('locationAddress', i),
+                                        },
+                                        jid,
+                                    };
+                                }
+                                responseData = await this.helpers.request({
+                                    method: 'POST',
+                                    url: `${baseUrl}/wspout`,
+                                    body: messageData,
+                                    json: true,
+                                });
                             }
-                            else if (messageType === 'image') {
-                                messageData = {
-                                    image: {
-                                        url: this.getNodeParameter('mediaUrl', i),
-                                        b64: this.getNodeParameter('mediaBase64', i),
-                                    },
-                                    caption: this.getNodeParameter('caption', i),
-                                    jid,
-                                };
-                            }
-                            else if (messageType === 'video') {
-                                messageData = {
-                                    video: {
-                                        url: this.getNodeParameter('mediaUrl', i),
-                                        b64: this.getNodeParameter('mediaBase64', i),
-                                    },
-                                    caption: this.getNodeParameter('caption', i),
-                                    jid,
-                                };
-                            }
-                            else if (messageType === 'document') {
-                                messageData = {
-                                    document: {
-                                        url: this.getNodeParameter('mediaUrl', i),
-                                        b64: this.getNodeParameter('mediaBase64', i),
-                                        filename: this.getNodeParameter('filename', i),
-                                    },
-                                    caption: this.getNodeParameter('caption', i),
-                                    jid,
-                                };
-                            }
-                            else if (messageType === 'audio') {
-                                messageData = {
-                                    audio: {
-                                        url: this.getNodeParameter('mediaUrl', i),
-                                        b64: this.getNodeParameter('mediaBase64', i),
-                                        seconds: this.getNodeParameter('audioSeconds', i),
-                                        isPTT: this.getNodeParameter('isPTT', i),
-                                    },
-                                    jid,
-                                };
-                            }
-                            else if (messageType === 'contact') {
-                                messageData = {
-                                    contact: {
-                                        displayName: this.getNodeParameter('contactDisplayName', i),
-                                        vcard: this.getNodeParameter('contactVCard', i),
-                                    },
-                                    jid,
-                                };
-                            }
-                            else if (messageType === 'location') {
-                                messageData = {
-                                    location: {
-                                        latitude: this.getNodeParameter('latitude', i),
-                                        longitude: this.getNodeParameter('longitude', i),
-                                        name: this.getNodeParameter('locationName', i),
-                                        address: this.getNodeParameter('locationAddress', i),
-                                    },
-                                    jid,
-                                };
-                            }
-                            responseData = await this.helpers.request({
-                                method: 'POST',
-                                url: `${baseUrl}/wspout`,
-                                body: messageData,
-                                json: true,
-                            });
                         }
                     }
                     else if (resource === 'group') {
