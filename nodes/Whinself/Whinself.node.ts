@@ -9,7 +9,7 @@ export class Whinself implements INodeType {
 	description: INodeTypeDescription = {
 		displayName: 'Whinself',
 		name: 'whinself',
-		icon: 'file:icons/whinself.png',
+		icon: 'file:whinself.ico',
 		group: ['communication'],
 		version: 1,
 		subtitle: '={{$parameter["operation"] + ": " + $parameter["resource"]}}',
