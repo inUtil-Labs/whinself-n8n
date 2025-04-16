@@ -1,69 +1,57 @@
-# n8n-nodes-whinself
+# Whinself Node for n8n
 
-This is an [n8n](https://n8n.io/) node to integrate with the Whinself WhatsApp API.
+Custom n8n node for Whinself integration.
 
-[n8n](https://n8n.io/) is a [fair-code licensed](https://docs.n8n.io/reference/license/) workflow automation platform.
+## Installation in n8n
 
-[Installation](#installation)  
-[Operations](#operations)  
-[Resources](#resources)  
-[Compatibility](#compatibility)  
-[Usage](#usage)  
-[Version history](#version-history)  
+To use this node in n8n, you need to add these three files to your `.n8n/custom/Whinself/` directory:
 
-## Installation
+1. `Whinself.node.js` - The main node implementation
+2. `index.js` - Node registration file
+3. `whinself.svg` - Node icon
 
-Follow the [installation guide](HOWTO.md) in the HOWTO.md file to set up this node in your n8n instance.
+You can either:
 
-## Operations
+A. Use the pre-built files from the `dist/` directory:
+   - Copy `dist/nodes/Whinself/Whinself.node.js`
+   - Copy `dist/nodes/Whinself/index.js`
+   - Copy `nodes/Whinself/whinself.svg`
 
-- Message
-  - Send
-- Group
-  - Create
-  - Get Info
-  - Get Joined Groups
-  - Update Participants
-  - Set Group Name
-  - Set Group Photo
-  - Get Invite Link
-  - Leave Group
-- Newsletter
-  - Create
-  - Get Info
-  - Publish
-  - Follow
-  - Unfollow
-  - Get Following
-  - Get Messages
-  - Update Logo
-- Contact
-  - Create
-  - Delete
-  - Get
-  - Get All
-- Poll
-  - Create
+B. Or build them yourself:
+```bash
+git clone https://github.com/inUtil-Labs/whinself-n8n.git
+cd whinself-n8n
+npm install
+npm run build
+```
 
-## Resources
+After copying the files, restart n8n for the changes to take effect.
 
-- [Message](https://docs.whinself.com/message)
-- [Group](https://docs.whinself.com/group)
-- [Newsletter](https://docs.whinself.com/newsletter)
-- [Contact](https://docs.whinself.com/contact)
-- [Poll](https://docs.whinself.com/poll)
+## Troubleshooting
 
-## Compatibility
+If the node doesn't appear in n8n after installation:
+1. Verify all three files are present in `.n8n/custom/Whinself/`
+2. Check file permissions (should be readable by n8n)
+3. Make sure you've restarted n8n after adding the files
 
-This node has been tested with n8n version 0.125.0.
+## Development
 
-## Usage
+For those who want to modify the node:
 
-For detailed usage instructions, please refer to the [HOWTO.md](HOWTO.md) file.
+```bash
+# Install dependencies
+npm install
 
-## Version history
+# Build the nodes
+npm run build
+```
 
-### 1.0.0
+The compiled files will be in the `dist/` directory.
 
-- Initial release
-- Added Message, Group, Newsletter, Contact, and Poll resources 
+## Contributing
+
+1. Fork the repository
+2. Create your feature branch
+3. Commit your changes
+4. Push to the branch
+5. Create a new Pull Request 

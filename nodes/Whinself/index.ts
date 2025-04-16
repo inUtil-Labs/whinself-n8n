@@ -1,7 +1,6 @@
+import { INodeType } from 'n8n-workflow';
 import { Whinself } from './Whinself.node';
-import { WhinselfApi } from './WhinselfApi.credentials';
 
-export {
-	Whinself,
-	WhinselfApi,
-}; 
+export const nodes: INodeType[] = [
+	new Whinself(),
+]; 

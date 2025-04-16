@@ -12,8 +12,8 @@
   "license": "MIT",
   "homepage": "https://github.com/inUtil-Labs/whinself-n8n",
   "author": {
-    "name": "Your Name",
-    "email": "your.email@example.com"
+    "name": "inUtil Labs",
+    "email": "info@inutil.info"
   },
   "repository": {
     "type": "git",
@@ -21,12 +21,12 @@
   },
   "main": "index.js",
   "scripts": {
-    "build": "tsc && gulp build:icons",
+    "build": "tsc",
     "dev": "tsc --watch",
-    "format": "prettier nodes credentials --write",
-    "lint": "eslint nodes credentials package.json",
-    "lintfix": "eslint nodes credentials package.json --fix",
-    "prepublishOnly": "npm run build && npm run lint -c .eslintrc.prepublish.js nodes credentials package.json"
+    "format": "prettier nodes --write",
+    "lint": "eslint nodes package.json",
+    "lintfix": "eslint nodes package.json --fix",
+    "prepublishOnly": "npm run build && npm run lint -c .eslintrc.prepublish.js nodes package.json"
   },
   "files": [
     "dist"
@@ -43,7 +43,6 @@
     "@types/request-promise-native": "~1.0.18",
     "@typescript-eslint/parser": "~5.45",
     "eslint-plugin-n8n-nodes-base": "^1.11.0",
-    "gulp": "^4.0.2",
     "n8n-core": "^0.125.0",
     "n8n-workflow": "^0.107.0",
     "prettier": "^2.7.1",

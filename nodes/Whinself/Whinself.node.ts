@@ -3,8 +3,6 @@ import {
 	INodeExecutionData,
 	INodeType,
 	INodeTypeDescription,
-	NodeConnectionType,
-	INodeProperties,
 } from 'n8n-workflow';
 
 export class Whinself implements INodeType {
@@ -19,8 +17,8 @@ export class Whinself implements INodeType {
 		defaults: {
 			name: 'Whinself',
 		},
-		inputs: [NodeConnectionType.Main],
-		outputs: [NodeConnectionType.Main],
+		inputs: ['main'],
+		outputs: ['main'],
 		properties: [
 			{
 				displayName: 'Resource',
@@ -1028,388 +1026,396 @@ export class Whinself implements INodeType {
 	async execute(this: IExecuteFunctions): Promise<INodeExecutionData[][]> {
 		const items = this.getInputData();
 		const returnData: INodeExecutionData[] = [];
-		const resource = this.getNodeParameter('resource', 0) as string;
-		const operation = this.getNodeParameter('operation', 0) as string;
+		
+		try {
+			const resource = this.getNodeParameter('resource', 0) as string;
+			const operation = this.getNodeParameter('operation', 0) as string;
 
-		// Base URL for Whinself API
-		const baseUrl = 'https://api.whinself.com';
+			// Base URL for Whinself API
+			const baseUrl = 'https://api.whinself.com';
 
-		for (let i = 0; i < items.length; i++) {
-			try {
-				let responseData;
+			for (let i = 0; i < items.length; i++) {
+				try {
+					let responseData;
 
-				// Handle different resources and operations
-				if (resource === 'message') {
-					if (operation === 'send') {
-						const jid = this.getNodeParameter('jid', i) as string;
-						const messageType = this.getNodeParameter('messageType', i) as string;
-						
-						let messageData: any = {};
-						
-						// Prepare message data based on message type
-						if (messageType === 'text') {
-							messageData = {
-								text: this.getNodeParameter('text', i) as string,
-								jid,
-							};
-						} else if (messageType === 'link') {
-							messageData = {
-								link: {
-									title: this.getNodeParameter('linkTitle', i) as string,
-									text: this.getNodeParameter('linkText', i) as string,
-									url: this.getNodeParameter('linkUrl', i) as string,
-									thumbnail: this.getNodeParameter('linkThumbnail', i) as string,
-									description: this.getNodeParameter('linkDescription', i) as string,
-								},
-								jid,
-							};
-						} else if (messageType === 'image') {
-							messageData = {
-								image: {
-									url: this.getNodeParameter('mediaUrl', i) as string,
-									b64: this.getNodeParameter('mediaBase64', i) as string,
-								},
-								caption: this.getNodeParameter('caption', i) as string,
-								jid,
-							};
-						} else if (messageType === 'video') {
-							messageData = {
-								video: {
-									url: this.getNodeParameter('mediaUrl', i) as string,
-									b64: this.getNodeParameter('mediaBase64', i) as string,
-								},
-								caption: this.getNodeParameter('caption', i) as string,
-								jid,
-							};
-						} else if (messageType === 'document') {
-							messageData = {
-								document: {
-									url: this.getNodeParameter('mediaUrl', i) as string,
-									b64: this.getNodeParameter('mediaBase64', i) as string,
-									filename: this.getNodeParameter('filename', i) as string,
-								},
-								caption: this.getNodeParameter('caption', i) as string,
-								jid,
-							};
-						} else if (messageType === 'audio') {
-							messageData = {
-								audio: {
-									url: this.getNodeParameter('mediaUrl', i) as string,
-									b64: this.getNodeParameter('mediaBase64', i) as string,
-									seconds: this.getNodeParameter('audioSeconds', i) as number,
-									isPTT: this.getNodeParameter('isPTT', i) as boolean,
-								},
-								jid,
-							};
-						} else if (messageType === 'contact') {
-							messageData = {
-								contact: {
-									displayName: this.getNodeParameter('contactDisplayName', i) as string,
-									vcard: this.getNodeParameter('contactVCard', i) as string,
-								},
-								jid,
-							};
-						} else if (messageType === 'location') {
-							messageData = {
-								location: {
-									latitude: this.getNodeParameter('latitude', i) as number,
-									longitude: this.getNodeParameter('longitude', i) as number,
-									name: this.getNodeParameter('locationName', i) as string,
-									address: this.getNodeParameter('locationAddress', i) as string,
-								},
-								jid,
-							};
+					// Handle different resources and operations
+					if (resource === 'message') {
+						if (operation === 'send') {
+							const jid = this.getNodeParameter('jid', i) as string;
+							const messageType = this.getNodeParameter('messageType', i) as string;
+							
+							let messageData: any = {};
+							
+							// Prepare message data based on message type
+							if (messageType === 'text') {
+								messageData = {
+									text: this.getNodeParameter('text', i) as string,
+									jid,
+								};
+							} else if (messageType === 'link') {
+								messageData = {
+									link: {
+										title: this.getNodeParameter('linkTitle', i) as string,
+										text: this.getNodeParameter('linkText', i) as string,
+										url: this.getNodeParameter('linkUrl', i) as string,
+										thumbnail: this.getNodeParameter('linkThumbnail', i) as string,
+										description: this.getNodeParameter('linkDescription', i) as string,
+									},
+									jid,
+								};
+							} else if (messageType === 'image') {
+								messageData = {
+									image: {
+										url: this.getNodeParameter('mediaUrl', i) as string,
+										b64: this.getNodeParameter('mediaBase64', i) as string,
+									},
+									caption: this.getNodeParameter('caption', i) as string,
+									jid,
+								};
+							} else if (messageType === 'video') {
+								messageData = {
+									video: {
+										url: this.getNodeParameter('mediaUrl', i) as string,
+										b64: this.getNodeParameter('mediaBase64', i) as string,
+									},
+									caption: this.getNodeParameter('caption', i) as string,
+									jid,
+								};
+							} else if (messageType === 'document') {
+								messageData = {
+									document: {
+										url: this.getNodeParameter('mediaUrl', i) as string,
+										b64: this.getNodeParameter('mediaBase64', i) as string,
+										filename: this.getNodeParameter('filename', i) as string,
+									},
+									caption: this.getNodeParameter('caption', i) as string,
+									jid,
+								};
+							} else if (messageType === 'audio') {
+								messageData = {
+									audio: {
+										url: this.getNodeParameter('mediaUrl', i) as string,
+										b64: this.getNodeParameter('mediaBase64', i) as string,
+										seconds: this.getNodeParameter('audioSeconds', i) as number,
+										isPTT: this.getNodeParameter('isPTT', i) as boolean,
+									},
+									jid,
+								};
+							} else if (messageType === 'contact') {
+								messageData = {
+									contact: {
+										displayName: this.getNodeParameter('contactDisplayName', i) as string,
+										vcard: this.getNodeParameter('contactVCard', i) as string,
+									},
+									jid,
+								};
+							} else if (messageType === 'location') {
+								messageData = {
+									location: {
+										latitude: this.getNodeParameter('latitude', i) as number,
+										longitude: this.getNodeParameter('longitude', i) as number,
+										name: this.getNodeParameter('locationName', i) as string,
+										address: this.getNodeParameter('locationAddress', i) as string,
+									},
+									jid,
+								};
+							}
+
+							// Send message
+							responseData = await this.helpers.request({
+								method: 'POST',
+								url: `${baseUrl}/wspout`,
+								body: messageData,
+								json: true,
+							});
 						}
-
-						// Send message
-						responseData = await this.helpers.request({
-							method: 'POST',
-							url: `${baseUrl}/wspout`,
-							body: messageData,
-							json: true,
-						});
-					}
-				} else if (resource === 'group') {
-					if (operation === 'create') {
-						const groupName = this.getNodeParameter('groupName', i) as string;
-						const participants = (this.getNodeParameter('participants', i) as string).split(',').map(p => p.trim());
-						
-						responseData = await this.helpers.request({
-							method: 'POST',
-							url: `${baseUrl}/creategroup`,
-							body: {
-								name: groupName,
-								participants,
-							},
-							json: true,
-						});
-					} else if (operation === 'getInfo') {
-						const groupJid = this.getNodeParameter('groupJid', i) as string;
-						
-						responseData = await this.helpers.request({
-							method: 'POST',
-							url: `${baseUrl}/getgroupinfo`,
-							body: {
-								jid: groupJid,
-							},
-							json: true,
-						});
-					} else if (operation === 'getJoinedGroups') {
-						responseData = await this.helpers.request({
-							method: 'GET',
-							url: `${baseUrl}/getjoinedgroups`,
-							json: true,
-						});
-					} else if (operation === 'updateParticipants') {
-						const groupJid = this.getNodeParameter('groupJid', i) as string;
-						const participantJids = (this.getNodeParameter('participantJids', i) as string).split(',').map(p => p.trim());
-						const participantAction = this.getNodeParameter('participantAction', i) as string;
-						
-						responseData = await this.helpers.request({
-							method: 'POST',
-							url: `${baseUrl}/upgradegroupparticipants`,
-							body: {
-								jid: groupJid,
-								participant_jids: participantJids,
-								action: participantAction,
-							},
-							json: true,
-						});
-					} else if (operation === 'setGroupName') {
-						const groupJid = this.getNodeParameter('groupJid', i) as string;
-						const groupName = this.getNodeParameter('groupName', i) as string;
-						
-						responseData = await this.helpers.request({
-							method: 'POST',
-							url: `${baseUrl}/setgroupname`,
-							body: {
-								jid: groupJid,
-								name: groupName,
-							},
-							json: true,
-						});
-					} else if (operation === 'setGroupPhoto') {
-						const groupJid = this.getNodeParameter('groupJid', i) as string;
-						const groupPhoto = this.getNodeParameter('groupPhoto', i) as string;
-						
-						responseData = await this.helpers.request({
-							method: 'POST',
-							url: `${baseUrl}/setgroupphoto`,
-							body: {
-								jid: groupJid,
-								avatar: groupPhoto,
-							},
-							json: true,
-						});
-					} else if (operation === 'getInviteLink') {
-						const groupJid = this.getNodeParameter('groupJid', i) as string;
-						const resetInviteLink = this.getNodeParameter('resetInviteLink', i) as boolean;
-						
-						responseData = await this.helpers.request({
-							method: 'POST',
-							url: `${baseUrl}/getgroupinvitelink`,
-							body: {
-								jid: groupJid,
-								reset: resetInviteLink,
-							},
-							json: true,
-						});
-					} else if (operation === 'leaveGroup') {
-						const groupJid = this.getNodeParameter('groupJid', i) as string;
-						
-						responseData = await this.helpers.request({
-							method: 'POST',
-							url: `${baseUrl}/leavegroup`,
-							body: {
-								jid: groupJid,
-							},
-							json: true,
-						});
-					}
-				} else if (resource === 'newsletter') {
-					if (operation === 'create') {
-						const channelName = this.getNodeParameter('channelName', i) as string;
-						const channelDescription = this.getNodeParameter('channelDescription', i) as string;
-						const channelPicture = this.getNodeParameter('channelPicture', i) as string;
-						
-						const pictureData: any = {};
-						if (channelPicture.startsWith('data:') || channelPicture.startsWith('http')) {
-							pictureData.picurl = channelPicture;
-						} else {
-							pictureData.b64 = channelPicture;
+					} else if (resource === 'group') {
+						if (operation === 'create') {
+							const groupName = this.getNodeParameter('groupName', i) as string;
+							const participants = (this.getNodeParameter('participants', i) as string).split(',').map(p => p.trim());
+							
+							responseData = await this.helpers.request({
+								method: 'POST',
+								url: `${baseUrl}/creategroup`,
+								body: {
+									name: groupName,
+									participants,
+								},
+								json: true,
+							});
+						} else if (operation === 'getInfo') {
+							const groupJid = this.getNodeParameter('groupJid', i) as string;
+							
+							responseData = await this.helpers.request({
+								method: 'POST',
+								url: `${baseUrl}/getgroupinfo`,
+								body: {
+									jid: groupJid,
+								},
+								json: true,
+							});
+						} else if (operation === 'getJoinedGroups') {
+							responseData = await this.helpers.request({
+								method: 'GET',
+								url: `${baseUrl}/getjoinedgroups`,
+								json: true,
+							});
+						} else if (operation === 'updateParticipants') {
+							const groupJid = this.getNodeParameter('groupJid', i) as string;
+							const participantJids = (this.getNodeParameter('participantJids', i) as string).split(',').map(p => p.trim());
+							const participantAction = this.getNodeParameter('participantAction', i) as string;
+							
+							responseData = await this.helpers.request({
+								method: 'POST',
+								url: `${baseUrl}/upgradegroupparticipants`,
+								body: {
+									jid: groupJid,
+									participant_jids: participantJids,
+									action: participantAction,
+								},
+								json: true,
+							});
+						} else if (operation === 'setGroupName') {
+							const groupJid = this.getNodeParameter('groupJid', i) as string;
+							const groupName = this.getNodeParameter('groupName', i) as string;
+							
+							responseData = await this.helpers.request({
+								method: 'POST',
+								url: `${baseUrl}/setgroupname`,
+								body: {
+									jid: groupJid,
+									name: groupName,
+								},
+								json: true,
+							});
+						} else if (operation === 'setGroupPhoto') {
+							const groupJid = this.getNodeParameter('groupJid', i) as string;
+							const groupPhoto = this.getNodeParameter('groupPhoto', i) as string;
+							
+							responseData = await this.helpers.request({
+								method: 'POST',
+								url: `${baseUrl}/setgroupphoto`,
+								body: {
+									jid: groupJid,
+									avatar: groupPhoto,
+								},
+								json: true,
+							});
+						} else if (operation === 'getInviteLink') {
+							const groupJid = this.getNodeParameter('groupJid', i) as string;
+							const resetInviteLink = this.getNodeParameter('resetInviteLink', i) as boolean;
+							
+							responseData = await this.helpers.request({
+								method: 'POST',
+								url: `${baseUrl}/getgroupinvitelink`,
+								body: {
+									jid: groupJid,
+									reset: resetInviteLink,
+								},
+								json: true,
+							});
+						} else if (operation === 'leaveGroup') {
+							const groupJid = this.getNodeParameter('groupJid', i) as string;
+							
+							responseData = await this.helpers.request({
+								method: 'POST',
+								url: `${baseUrl}/leavegroup`,
+								body: {
+									jid: groupJid,
+								},
+								json: true,
+							});
 						}
-						
-						responseData = await this.helpers.request({
-							method: 'POST',
-							url: `${baseUrl}/newchannel`,
-							body: {
-								name: channelName,
-								description: channelDescription,
-								picture: pictureData,
-							},
-							json: true,
-						});
-					} else if (operation === 'getInfo') {
-						const channelJid = this.getNodeParameter('channelJid', i) as string;
-						
-						responseData = await this.helpers.request({
-							method: 'GET',
-							url: `${baseUrl}/getchannelinfo`,
-							qs: {
-								channel: channelJid,
-							},
-							json: true,
-						});
-					} else if (operation === 'publish') {
-						// Similar to message sending but to a channel
-						const channelJid = this.getNodeParameter('channelJid', i) as string;
-						
-						// For simplicity, we'll just support text messages for now
-						// In a real implementation, you would add support for other message types
-						responseData = await this.helpers.request({
-							method: 'POST',
-							url: `${baseUrl}/channelpublish`,
-							body: {
-								text: 'Channel message',
-								jid: channelJid,
-							},
-							json: true,
-						});
-					} else if (operation === 'follow') {
-						const channelJid = this.getNodeParameter('channelJid', i) as string;
-						
-						responseData = await this.helpers.request({
-							method: 'GET',
-							url: `${baseUrl}/follow`,
-							qs: {
-								channel: channelJid,
-							},
-							json: true,
-						});
-					} else if (operation === 'unfollow') {
-						const channelJid = this.getNodeParameter('channelJid', i) as string;
-						
-						responseData = await this.helpers.request({
-							method: 'GET',
-							url: `${baseUrl}/unfollow`,
-							qs: {
-								channel: channelJid,
-							},
-							json: true,
-						});
-					} else if (operation === 'getFollowing') {
-						responseData = await this.helpers.request({
-							method: 'GET',
-							url: `${baseUrl}/following`,
-							json: true,
-						});
-					} else if (operation === 'getMessages') {
-						const channelJid = this.getNodeParameter('channelJid', i) as string;
-						
-						responseData = await this.helpers.request({
-							method: 'GET',
-							url: `${baseUrl}/getnewslettermessages`,
-							qs: {
-								channelJID: channelJid,
-							},
-							json: true,
-						});
-					} else if (operation === 'updateLogo') {
-						const channelJid = this.getNodeParameter('channelJid', i) as string;
-						const channelPicture = this.getNodeParameter('channelPicture', i) as string;
-						
-						// This would typically be a multipart form request
-						// Simplified for this example
-						responseData = await this.helpers.request({
-							method: 'POST',
-							url: `${baseUrl}/updatechannellogo`,
-							formData: {
-								channelJID: channelJid,
-								picture: channelPicture,
-							},
-							json: true,
-						});
+					} else if (resource === 'newsletter') {
+						if (operation === 'create') {
+							const channelName = this.getNodeParameter('channelName', i) as string;
+							const channelDescription = this.getNodeParameter('channelDescription', i) as string;
+							const channelPicture = this.getNodeParameter('channelPicture', i) as string;
+							
+							const pictureData: any = {};
+							if (channelPicture.startsWith('data:') || channelPicture.startsWith('http')) {
+								pictureData.picurl = channelPicture;
+							} else {
+								pictureData.b64 = channelPicture;
+							}
+							
+							responseData = await this.helpers.request({
+								method: 'POST',
+								url: `${baseUrl}/newchannel`,
+								body: {
+									name: channelName,
+									description: channelDescription,
+									picture: pictureData,
+								},
+								json: true,
+							});
+						} else if (operation === 'getInfo') {
+							const channelJid = this.getNodeParameter('channelJid', i) as string;
+							
+							responseData = await this.helpers.request({
+								method: 'GET',
+								url: `${baseUrl}/getchannelinfo`,
+								qs: {
+									channel: channelJid,
+								},
+								json: true,
+							});
+						} else if (operation === 'publish') {
+							// Similar to message sending but to a channel
+							const channelJid = this.getNodeParameter('channelJid', i) as string;
+							
+							// For simplicity, we'll just support text messages for now
+							// In a real implementation, you would add support for other message types
+							responseData = await this.helpers.request({
+								method: 'POST',
+								url: `${baseUrl}/channelpublish`,
+								body: {
+									text: 'Channel message',
+									jid: channelJid,
+								},
+								json: true,
+							});
+						} else if (operation === 'follow') {
+							const channelJid = this.getNodeParameter('channelJid', i) as string;
+							
+							responseData = await this.helpers.request({
+								method: 'GET',
+								url: `${baseUrl}/follow`,
+								qs: {
+									channel: channelJid,
+								},
+								json: true,
+							});
+						} else if (operation === 'unfollow') {
+							const channelJid = this.getNodeParameter('channelJid', i) as string;
+							
+							responseData = await this.helpers.request({
+								method: 'GET',
+								url: `${baseUrl}/unfollow`,
+								qs: {
+									channel: channelJid,
+								},
+								json: true,
+							});
+						} else if (operation === 'getFollowing') {
+							responseData = await this.helpers.request({
+								method: 'GET',
+								url: `${baseUrl}/following`,
+								json: true,
+							});
+						} else if (operation === 'getMessages') {
+							const channelJid = this.getNodeParameter('channelJid', i) as string;
+							
+							responseData = await this.helpers.request({
+								method: 'GET',
+								url: `${baseUrl}/getnewslettermessages`,
+								qs: {
+									channelJID: channelJid,
+								},
+								json: true,
+							});
+						} else if (operation === 'updateLogo') {
+							const channelJid = this.getNodeParameter('channelJid', i) as string;
+							const channelPicture = this.getNodeParameter('channelPicture', i) as string;
+							
+							// This would typically be a multipart form request
+							// Simplified for this example
+							responseData = await this.helpers.request({
+								method: 'POST',
+								url: `${baseUrl}/updatechannellogo`,
+								formData: {
+									channelJID: channelJid,
+									picture: channelPicture,
+								},
+								json: true,
+							});
+						}
+					} else if (resource === 'contact') {
+						if (operation === 'create') {
+							const contactJid = this.getNodeParameter('contactJid', i) as string;
+							const contactName = this.getNodeParameter('contactName', i) as string;
+							
+							responseData = await this.helpers.request({
+								method: 'POST',
+								url: `${baseUrl}/createcontact`,
+								body: {
+									jid: contactJid,
+									name: contactName,
+								},
+								json: true,
+							});
+						} else if (operation === 'delete') {
+							const contactJid = this.getNodeParameter('contactJid', i) as string;
+							
+							responseData = await this.helpers.request({
+								method: 'POST',
+								url: `${baseUrl}/deletecontact`,
+								body: {
+									jid: contactJid,
+								},
+								json: true,
+							});
+						} else if (operation === 'get') {
+							const contactJid = this.getNodeParameter('contactJid', i) as string;
+							
+							responseData = await this.helpers.request({
+								method: 'GET',
+								url: `${baseUrl}/getcontact`,
+								qs: {
+									phone: contactJid,
+								},
+								json: true,
+							});
+						} else if (operation === 'getAll') {
+							responseData = await this.helpers.request({
+								method: 'GET',
+								url: `${baseUrl}/getcontacts`,
+								json: true,
+							});
+						}
+					} else if (resource === 'poll') {
+						if (operation === 'create') {
+							const chatJid = this.getNodeParameter('chatJid', i) as string;
+							const pollQuestion = this.getNodeParameter('pollQuestion', i) as string;
+							const pollOptions = (this.getNodeParameter('pollOptions', i) as string).split(',').map(o => o.trim());
+							const selectableOptionCount = this.getNodeParameter('selectableOptionCount', i) as number;
+							
+							responseData = await this.helpers.request({
+								method: 'POST',
+								url: `${baseUrl}/createpoll`,
+								body: {
+									chat: chatJid,
+									name: pollQuestion,
+									optionNames: pollOptions,
+									selectableOptionCount,
+								},
+								json: true,
+							});
+						}
 					}
-				} else if (resource === 'contact') {
-					if (operation === 'create') {
-						const contactJid = this.getNodeParameter('contactJid', i) as string;
-						const contactName = this.getNodeParameter('contactName', i) as string;
-						
-						responseData = await this.helpers.request({
-							method: 'POST',
-							url: `${baseUrl}/createcontact`,
-							body: {
-								jid: contactJid,
-								name: contactName,
-							},
-							json: true,
-						});
-					} else if (operation === 'delete') {
-						const contactJid = this.getNodeParameter('contactJid', i) as string;
-						
-						responseData = await this.helpers.request({
-							method: 'POST',
-							url: `${baseUrl}/deletecontact`,
-							body: {
-								jid: contactJid,
-							},
-							json: true,
-						});
-					} else if (operation === 'get') {
-						const contactJid = this.getNodeParameter('contactJid', i) as string;
-						
-						responseData = await this.helpers.request({
-							method: 'GET',
-							url: `${baseUrl}/getcontact`,
-							qs: {
-								phone: contactJid,
-							},
-							json: true,
-						});
-					} else if (operation === 'getAll') {
-						responseData = await this.helpers.request({
-							method: 'GET',
-							url: `${baseUrl}/getcontacts`,
-							json: true,
-						});
-					}
-				} else if (resource === 'poll') {
-					if (operation === 'create') {
-						const chatJid = this.getNodeParameter('chatJid', i) as string;
-						const pollQuestion = this.getNodeParameter('pollQuestion', i) as string;
-						const pollOptions = (this.getNodeParameter('pollOptions', i) as string).split(',').map(o => o.trim());
-						const selectableOptionCount = this.getNodeParameter('selectableOptionCount', i) as number;
-						
-						responseData = await this.helpers.request({
-							method: 'POST',
-							url: `${baseUrl}/createpoll`,
-							body: {
-								chat: chatJid,
-								name: pollQuestion,
-								optionNames: pollOptions,
-								selectableOptionCount,
-							},
-							json: true,
-						});
-					}
-				}
 
-				returnData.push({
-					json: responseData,
-				});
-			} catch (error) {
-				if (this.continueOnFail()) {
 					returnData.push({
-						json: {
-							error: error.message,
-						},
+						json: responseData,
 					});
-					continue;
+				} catch (error: unknown) {
+					if (this.continueOnFail()) {
+						returnData.push({
+							json: {
+								error: error instanceof Error ? error.message : 'An unknown error occurred',
+							},
+						});
+						continue;
+					}
+					throw error;
 				}
-				throw error;
 			}
-		}
 
-		return [returnData];
+			return [returnData];
+		} catch (error: unknown) {
+			if (error instanceof Error) {
+				throw new Error(`Whinself Error: ${error.message}`);
+			}
+			throw new Error('An unknown error occurred');
+		}
 	}
 } 
