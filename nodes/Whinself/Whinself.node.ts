@@ -9,7 +9,7 @@ export class Whinself implements INodeType {
 	description: INodeTypeDescription = {
 		displayName: 'Whinself',
 		name: 'whinself',
-		icon: 'file:icons/whinself.ico',
+		icon: 'file:icons/whinself.png',
 		group: ['communication'],
 		version: 1,
 		subtitle: '={{$parameter["operation"] + ": " + $parameter["resource"]}}',
@@ -87,6 +87,23 @@ export class Whinself implements INodeType {
 					},
 				],
 				default: 'send',
+			},
+			{
+				displayName: 'Use Incoming Data',
+				name: 'useIncomingData',
+				type: 'boolean',
+				default: true,
+				displayOptions: {
+					show: {
+						resource: [
+							'message',
+						],
+						operation: [
+							'send',
+						],
+					},
+				},
+				description: 'Whether to use the incoming data from the previous node',
 			},
 			// Group Operations
 			{
@@ -295,6 +312,9 @@ export class Whinself implements INodeType {
 						operation: [
 							'send',
 						],
+						useIncomingData: [
+							false,
+						],
 					},
 				},
 				options: [
@@ -347,6 +367,9 @@ export class Whinself implements INodeType {
 						operation: [
 							'send',
 						],
+						useIncomingData: [
+							false,
+						],
 					},
 				},
 				description: 'The JID of the recipient (e.g., 1234567890@s.whatsapp.net)',
@@ -366,6 +389,9 @@ export class Whinself implements INodeType {
 						],
 						messageType: [
 							'text',
+						],
+						useIncomingData: [
+							false,
 						],
 					},
 				},
@@ -1046,6 +1072,7 @@ export class Whinself implements INodeType {
 		try {
 			const resource = this.getNodeParameter('resource', 0) as string;
 			const operation = this.getNodeParameter('operation', 0) as string;
+			const useIncomingData = this.getNodeParameter('useIncomingData', 0) as boolean;
 
 			// Construct base URL from URL and port
 			const apiUrl = this.getNodeParameter('apiUrl', 0) as string;
@@ -1063,8 +1090,8 @@ export class Whinself implements INodeType {
 							// Get the incoming payload
 							const incomingData = item.json;
 							
-							// If we have an incoming payload, use it directly
-							if (incomingData && Object.keys(incomingData).length > 0) {
+							// If we have an incoming payload and useIncomingData is true, use it directly
+							if (useIncomingData && incomingData && Object.keys(incomingData).length > 0) {
 								// Make sure the payload has a jid field
 								if (!incomingData.jid) {
 									throw new Error('The incoming payload must include a "jid" field with the recipient JID');
@@ -1077,7 +1104,7 @@ export class Whinself implements INodeType {
 									json: true,
 								});
 							} else {
-								// Fallback to using node parameters if no incoming payload
+								// Use node parameters
 								const jid = this.getNodeParameter('jid', i) as string;
 								const messageType = this.getNodeParameter('messageType', i) as string;
 								

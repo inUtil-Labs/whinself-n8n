@@ -6,7 +6,7 @@ class Whinself {
         this.description = {
             displayName: 'Whinself',
             name: 'whinself',
-            icon: 'file:icons/whinself.ico',
+            icon: 'file:icons/whinself.png',
             group: ['communication'],
             version: 1,
             subtitle: '={{$parameter["operation"] + ": " + $parameter["resource"]}}',
@@ -83,6 +83,23 @@ class Whinself {
                         },
                     ],
                     default: 'send',
+                },
+                {
+                    displayName: 'Use Incoming Data',
+                    name: 'useIncomingData',
+                    type: 'boolean',
+                    default: true,
+                    displayOptions: {
+                        show: {
+                            resource: [
+                                'message',
+                            ],
+                            operation: [
+                                'send',
+                            ],
+                        },
+                    },
+                    description: 'Whether to use the incoming data from the previous node',
                 },
                 {
                     displayName: 'Operation',
@@ -286,6 +303,9 @@ class Whinself {
                             operation: [
                                 'send',
                             ],
+                            useIncomingData: [
+                                false,
+                            ],
                         },
                     },
                     options: [
@@ -338,6 +358,9 @@ class Whinself {
                             operation: [
                                 'send',
                             ],
+                            useIncomingData: [
+                                false,
+                            ],
                         },
                     },
                     description: 'The JID of the recipient (e.g., 1234567890@s.whatsapp.net)',
@@ -357,6 +380,9 @@ class Whinself {
                             ],
                             messageType: [
                                 'text',
+                            ],
+                            useIncomingData: [
+                                false,
                             ],
                         },
                     },
@@ -1028,6 +1054,7 @@ class Whinself {
         try {
             const resource = this.getNodeParameter('resource', 0);
             const operation = this.getNodeParameter('operation', 0);
+            const useIncomingData = this.getNodeParameter('useIncomingData', 0);
             const apiUrl = this.getNodeParameter('apiUrl', 0);
             const apiPort = this.getNodeParameter('apiPort', 0);
             const baseUrl = `${apiUrl}:${apiPort}`;
@@ -1038,7 +1065,7 @@ class Whinself {
                     if (resource === 'message') {
                         if (operation === 'send') {
                             const incomingData = item.json;
-                            if (incomingData && Object.keys(incomingData).length > 0) {
+                            if (useIncomingData && incomingData && Object.keys(incomingData).length > 0) {
                                 if (!incomingData.jid) {
                                     throw new Error('The incoming payload must include a "jid" field with the recipient JID');
                                 }
