@@ -9,7 +9,7 @@ export class Whinself implements INodeType {
 	description: INodeTypeDescription = {
 		displayName: 'Whinself',
 		name: 'whinself',
-		icon: 'file:whinself.ico',
+		icon: 'file:icons/whinself.ico',
 		group: ['communication'],
 		version: 1,
 		subtitle: '={{$parameter["operation"] + ": " + $parameter["resource"]}}',
@@ -1065,6 +1065,11 @@ export class Whinself implements INodeType {
 							
 							// If we have an incoming payload, use it directly
 							if (incomingData && Object.keys(incomingData).length > 0) {
+								// Make sure the payload has a jid field
+								if (!incomingData.jid) {
+									throw new Error('The incoming payload must include a "jid" field with the recipient JID');
+								}
+								
 								responseData = await this.helpers.request({
 									method: 'POST',
 									url: `${baseUrl}/wspout`,
