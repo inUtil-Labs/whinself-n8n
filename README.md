@@ -2,30 +2,27 @@
 
 Custom n8n node for Whinself integration.
 
-## Installation in n8n
+## Installation
 
-To use this node in n8n, you need to add these three files to your `.n8n/custom/Whinself/` directory:
+### Option 1: Using pre-built files
 
-1. `Whinself.node.js` - The main node implementation (from `dist/nodes/Whinself/`)
-2. `index.js` - Node registration file (from `dist/nodes/Whinself/`)
-3. `whinself.ico` - Node icon (from root directory)
+1. Copy the following files to your n8n custom nodes directory:
+   - `dist/nodes/Whinself/Whinself.node.js` → `/home/node/.n8n/custom/Whinself/`
+   - `dist/nodes/Whinself/index.js` → `/home/node/.n8n/custom/Whinself/`
+   - `nodes/Whinself/icons/whinself.ico` → `/home/node/.n8n/custom/Whinself/icons/`
 
-You can either:
+2. Restart n8n to load the new nodes
 
-A. Use the pre-built files from the repository:
-   - Copy `dist/nodes/Whinself/Whinself.node.js`
-   - Copy `dist/nodes/Whinself/index.js`
-   - Copy `whinself.ico`
+### Option 2: Building from source
 
-B. Or build them yourself:
-```bash
-git clone https://github.com/inUtil-Labs/whinself-n8n.git
-cd whinself-n8n
-npm install
-npm run build
-```
-
-After copying the files, restart n8n for the changes to take effect.
+1. Clone this repository
+2. Install dependencies: `npm install`
+3. Build the nodes: `npm run build`
+4. Copy the built files to your n8n custom nodes directory:
+   - `dist/nodes/Whinself/Whinself.node.js` → `/home/node/.n8n/custom/Whinself/`
+   - `dist/nodes/Whinself/index.js` → `/home/node/.n8n/custom/Whinself/`
+   - `nodes/Whinself/icons/whinself.ico` → `/home/node/.n8n/custom/Whinself/icons/`
+5. Restart n8n to load the new nodes
 
 ## Troubleshooting
 

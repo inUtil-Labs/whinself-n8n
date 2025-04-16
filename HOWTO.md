@@ -21,67 +21,39 @@ This document provides detailed instructions on how to deploy the Whinself nodes
 
 ### Installation Steps
 
-1. Clone the repository:
+### Option 1: Using pre-built files
 
-```bash
-git clone https://github.com/inUtil-Labs/whinself-n8n.git
-cd whinself-n8n
-```
+1. Copy the following files to your n8n custom nodes directory:
+   - `dist/nodes/Whinself/Whinself.node.js` → `/home/node/.n8n/custom/Whinself/`
+   - `dist/nodes/Whinself/index.js` → `/home/node/.n8n/custom/Whinself/`
+   - `nodes/Whinself/icons/whinself.ico` → `/home/node/.n8n/custom/Whinself/icons/`
+
+2. Restart n8n to load the new nodes
+
+### Option 2: Building from source
+
+1. Clone this repository:
+   ```bash
+   git clone https://github.com/inUtil-Labs/whinself-n8n.git
+   cd whinself-n8n
+   ```
 
 2. Install dependencies:
-
-```bash
-npm install
-```
+   ```bash
+   npm install
+   ```
 
 3. Build the nodes:
+   ```bash
+   npm run build
+   ```
 
-```bash
-npm run build
-```
+4. Copy the built files to your n8n custom nodes directory:
+   - `dist/nodes/Whinself/Whinself.node.js` → `/home/node/.n8n/custom/Whinself/`
+   - `dist/nodes/Whinself/index.js` → `/home/node/.n8n/custom/Whinself/`
+   - `nodes/Whinself/icons/whinself.ico` → `/home/node/.n8n/custom/Whinself/icons/`
 
-4. Copy the built nodes to your n8n custom nodes directory:
-
-#### For Local Installation:
-
-```bash
-# For Linux/macOS
-mkdir -p ~/.n8n/custom
-cp -r nodes/Whinself ~/.n8n/custom/
-
-# For Windows
-mkdir -p %USERPROFILE%\.n8n\custom
-xcopy /E /I nodes\Whinself %USERPROFILE%\.n8n\custom\Whinself
-```
-
-#### For Docker Container Installation:
-
-If you're running n8n in a Docker container with a volume mount like `-v n8n_data:/Volumes/n8n`:
-
-```bash
-# Create the custom directory in the mounted volume
-mkdir -p /path/to/n8n_data/custom
-
-# Copy the nodes to the custom directory
-cp -r nodes/Whinself /path/to/n8n_data/custom/
-```
-
-Replace `/path/to/n8n_data` with the actual path to your n8n data volume on the host machine.
-
-5. Restart n8n to load the new nodes:
-
-```bash
-# If running n8n directly
-n8n restart
-
-# If running n8n as a service
-sudo systemctl restart n8n
-
-# If running n8n in a Docker container
-docker restart <container_name>
-```
-
-Replace `<container_name>` with the name or ID of your n8n container.
+5. Restart n8n to load the new nodes
 
 ## Adding the Node to n8n
 
