@@ -6,7 +6,7 @@ class Whinself {
         this.description = {
             displayName: 'Whinself',
             name: 'whinself',
-            icon: 'file:whinself.svg',
+            icon: 'file:whinself.ico',
             group: ['communication'],
             version: 1,
             subtitle: '={{$parameter["operation"] + ": " + $parameter["resource"]}}',
@@ -17,6 +17,22 @@ class Whinself {
             inputs: ['main'],
             outputs: ['main'],
             properties: [
+                {
+                    displayName: 'API URL',
+                    name: 'apiUrl',
+                    type: 'string',
+                    default: 'http://localhost',
+                    required: true,
+                    description: 'URL of your Whinself API instance (without port)',
+                },
+                {
+                    displayName: 'API Port',
+                    name: 'apiPort',
+                    type: 'number',
+                    default: 3000,
+                    required: true,
+                    description: 'Port of your Whinself API instance',
+                },
                 {
                     displayName: 'Resource',
                     name: 'resource',
@@ -1012,7 +1028,9 @@ class Whinself {
         try {
             const resource = this.getNodeParameter('resource', 0);
             const operation = this.getNodeParameter('operation', 0);
-            const baseUrl = 'https://api.whinself.com';
+            const apiUrl = this.getNodeParameter('apiUrl', 0);
+            const apiPort = this.getNodeParameter('apiPort', 0);
+            const baseUrl = `${apiUrl}:${apiPort}`;
             for (let i = 0; i < items.length; i++) {
                 try {
                     let responseData;

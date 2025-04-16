@@ -9,7 +9,7 @@ export class Whinself implements INodeType {
 	description: INodeTypeDescription = {
 		displayName: 'Whinself',
 		name: 'whinself',
-		icon: 'file:whinself.svg',
+		icon: 'file:whinself.ico',
 		group: ['communication'],
 		version: 1,
 		subtitle: '={{$parameter["operation"] + ": " + $parameter["resource"]}}',
@@ -20,6 +20,22 @@ export class Whinself implements INodeType {
 		inputs: ['main'],
 		outputs: ['main'],
 		properties: [
+			{
+				displayName: 'API URL',
+				name: 'apiUrl',
+				type: 'string',
+				default: 'http://localhost',
+				required: true,
+				description: 'URL of your Whinself API instance (without port)',
+			},
+			{
+				displayName: 'API Port',
+				name: 'apiPort',
+				type: 'number',
+				default: 3000,
+				required: true,
+				description: 'Port of your Whinself API instance',
+			},
 			{
 				displayName: 'Resource',
 				name: 'resource',
@@ -1031,8 +1047,10 @@ export class Whinself implements INodeType {
 			const resource = this.getNodeParameter('resource', 0) as string;
 			const operation = this.getNodeParameter('operation', 0) as string;
 
-			// Base URL for Whinself API
-			const baseUrl = 'https://api.whinself.com';
+			// Construct base URL from URL and port
+			const apiUrl = this.getNodeParameter('apiUrl', 0) as string;
+			const apiPort = this.getNodeParameter('apiPort', 0) as number;
+			const baseUrl = `${apiUrl}:${apiPort}`;
 
 			for (let i = 0; i < items.length; i++) {
 				try {
