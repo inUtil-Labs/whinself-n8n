@@ -1,0 +1,43 @@
+# Development files
+.git
+.github
+.gitignore
+.npmignore
+.eslintrc
+.prettierrc
+tsconfig.json
+gulpfile.js
+package-lock.json
+yarn.lock
+
+# Documentation
+docs/
+*.md
+!README.md
+
+# Tests
+test/
+*.test.js
+*.spec.js
+
+# Source files
+src/
+nodes/
+credentials/
+
+# Build files
+dist/
+build/
+
+# Editor files
+.idea/
+.vscode/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# OS files
+.DS_Store
+Thumbs.db 
