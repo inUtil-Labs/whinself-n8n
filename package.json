@@ -21,7 +21,8 @@
   },
   "main": "index.js",
   "scripts": {
-    "build": "tsc",
+    "build": "tsc && npm run copy-icons",
+    "copy-icons": "mkdir -p dist/nodes/Whinself/icons && cp nodes/Whinself/icons/* dist/nodes/Whinself/icons/",
     "dev": "tsc --watch",
     "format": "prettier nodes --write",
     "lint": "eslint nodes package.json",
