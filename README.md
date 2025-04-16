@@ -6,16 +6,16 @@ Custom n8n node for Whinself integration.
 
 To use this node in n8n, you need to add these three files to your `.n8n/custom/Whinself/` directory:
 
-1. `Whinself.node.js` - The main node implementation
-2. `index.js` - Node registration file
-3. `whinself.svg` - Node icon
+1. `Whinself.node.js` - The main node implementation (from `dist/nodes/Whinself/`)
+2. `index.js` - Node registration file (from `dist/nodes/Whinself/`)
+3. `whinself.ico` - Node icon (from root directory)
 
 You can either:
 
-A. Use the pre-built files from the `dist/` directory:
+A. Use the pre-built files from the repository:
    - Copy `dist/nodes/Whinself/Whinself.node.js`
    - Copy `dist/nodes/Whinself/index.js`
-   - Copy `nodes/Whinself/whinself.svg`
+   - Copy `whinself.ico`
 
 B. Or build them yourself:
 ```bash
@@ -33,6 +33,7 @@ If the node doesn't appear in n8n after installation:
 1. Verify all three files are present in `.n8n/custom/Whinself/`
 2. Check file permissions (should be readable by n8n)
 3. Make sure you've restarted n8n after adding the files
+4. If the icon doesn't appear, verify that `whinself.ico` is in the correct location
 
 ## Development
 
